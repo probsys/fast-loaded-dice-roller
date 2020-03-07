@@ -1,0 +1,9 @@
+*.out
+*.egg-info
+
+.cache
+__pycache__
+build
+dist
+src/python/version.py
+VERSION
