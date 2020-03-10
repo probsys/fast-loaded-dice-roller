@@ -48,16 +48,11 @@ struct fldr_s fldr_preprocess(int *a, int n) {
     int *h = (int *) calloc(k, sizeof(int));
     int *H = (int *) calloc((n+1)*k, sizeof(int));
 
-    for (int row = 0; row < n+1; row++) {
-        for (int col = 0; col < k; col++) {
-            H[row*k + col] = -1;
-        }
-    }
-
     int d;
     for(int j = 0; j < k; j++) {
         d = 0;
         for (int i = 0 ; i < n; i++) {
+            H[i*k + j] = -1;
             bool w = (a[i] >> ((k-1) -j)) & 1;
             h[j] += w;
             if (w) {
@@ -65,6 +60,7 @@ struct fldr_s fldr_preprocess(int *a, int n) {
                 d += 1;
             }
         }
+        H[n*k + j] = -1;
         bool w = (r >> ((k-1) - j)) & 1;
         h[j] += w;
         if (w) {
