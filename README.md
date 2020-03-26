@@ -10,7 +10,7 @@ Artificial Intelligence and Statistics, Proceedings of Machine Learning
 Research 108, Palermo, Sicily, Italy, 2020.
 
 The Fast Loaded Dice Roller (FLDR) is a fast algorithm for rolling an
-n-sided die.  More specifically, given a list `L` of `n` integers
+n-sided dice.  More specifically, given a list `L` of `n` numbers
 that sum to `m`, FLDR returns an integer `i` with probability `L[i]/m`.
 
 ## Installing
@@ -52,6 +52,20 @@ The above example can be invoked by e.g., running
     $ python setup.py build
     $ ./pythenv.sh python src/python/example.py
 
+If `distribution` is specified as a list of positive floats
+(not necessarily summing to one), then use `fldr_preprocess_float`:
+
+```python
+from fldr import fldr_preprocess_float
+from fldr import fldr_sample
+
+N_sample = 100
+distribution = [5/7, 1/128, 1.711]
+x = fldr_preprocess_float(distribution)
+samples = [fldr_sample(x) for _i in range(N_sample)]
+print(' '.join(map(str, samples)))
+```
+
 ## Usage (Command Line Interface)
 
 The command line script in `./build/bin/fldr` has the following interface:
@@ -66,6 +80,8 @@ For example, to generate 100 samples from {1, 1, 2, 3, 1}, run:
 
     $ echo '5 1 1 2 3 1' > w
     $ ./build/bin/fldr 100 w
+
+The CLI only supports integer distributions.
 
 ## Usage (C Library)
 
@@ -100,6 +116,9 @@ The above example can be invoked by e.g., running
     $ cd src/c
     $ make example.out
     $ ./example.out
+
+Only integer distributions are currently implemented in the `C` library
+([issue #2](https://github.com/probcomp/fast-loaded-dice-roller/issues/2)).
 
 ## Tests
 
