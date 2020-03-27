@@ -22,6 +22,6 @@ struct fldr_s {
 int ceil_log2(unsigned long long x);
 struct fldr_s fldr_preprocess(int *a, int n);
 int fldr_sample(struct fldr_s *x);
-int fldr_free(struct fldr_s *x);
+void fldr_free(struct fldr_s *x);
 
 #endif

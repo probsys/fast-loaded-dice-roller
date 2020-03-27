@@ -107,7 +107,7 @@ int fldr_sample(struct fldr_s *x) {
     }
 }
 
-int fldr_free(struct fldr_s *x) {
+void fldr_free(struct fldr_s *x) {
     free(x->h);
     free(x->H);
 }
