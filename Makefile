@@ -14,3 +14,4 @@ python: setup.py
 .PHONY:clean
 clean:
 	rm -rf build
+	$(MAKE) -C src/c clean
