@@ -18,10 +18,11 @@ struct fldr_s {
     int *h;
     int *H;
 };
+typedef struct fldr_s fldr_preprocess_t;
 
 int ceil_log2(unsigned long long x);
-struct fldr_s fldr_preprocess(int *a, int n);
-int fldr_sample(struct fldr_s *x);
-void fldr_free(struct fldr_s *x);
+fldr_preprocess_t * fldr_preprocess(int *a, int n);
+int fldr_sample(fldr_preprocess_t *x);
+void fldr_free(fldr_preprocess_t *x);
 
 #endif

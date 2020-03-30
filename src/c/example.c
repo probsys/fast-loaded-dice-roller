@@ -16,13 +16,13 @@ int main(int argc, char **argv) {
     int * samples = (int *) calloc(N_sample, sizeof(int));
 
     int distribution[5] = { 1, 1, 2, 3, 1 };
-    struct fldr_s x = fldr_preprocess(distribution, 5);
+    fldr_preprocess_t *x = fldr_preprocess(distribution, 5);
     for (int i = 0; i < N_sample; i++) {
-        samples[i] = fldr_sample(&x);
+        samples[i] = fldr_sample(x);
         printf("%d ", samples[i]);
     }
     printf("\n");
 
     free(samples);
-    fldr_free(&x);
+    fldr_free(x);
 }

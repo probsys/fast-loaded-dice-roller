@@ -23,7 +23,7 @@ int * load_array(FILE *fp, int length) {
     return a;
 }
 
-void write_fldr_s(char *fname, struct fldr_s *x) {
+void write_fldr_s(char *fname, fldr_preprocess_t *x) {
     char *fname_s = strcat(fname, ".fldr");
     FILE *fp = fopen(fname_s, "w");
 
@@ -73,9 +73,9 @@ int main(int argc, char **argv) {
 
     // Obtain the samples.
     int * samples = (int *) calloc(N, sizeof(int));
-    struct fldr_s x = fldr_preprocess(a, n);
+    fldr_preprocess_t *x = fldr_preprocess(a, n);
     for (int i = 0; i < N; i++) {
-        samples[i] = fldr_sample(&x);
+        samples[i] = fldr_sample(x);
     }
 
     // Print the samples.
@@ -86,13 +86,13 @@ int main(int argc, char **argv) {
 
     // Write the structure.
     if (argc == 4) {
-        write_fldr_s(path, &x);
+        write_fldr_s(path, x);
     }
 
     // Free the heap.
     free(a);
     free(samples);
-    fldr_free(&x);
+    fldr_free(x);
 
     return 0;
 }

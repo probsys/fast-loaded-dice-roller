@@ -37,7 +37,7 @@ int ceil_log2(unsigned long long x) {
   return y;
 }
 
-struct fldr_s fldr_preprocess(int *a, int n) {
+fldr_preprocess_t * fldr_preprocess(int *a, int n) {
     int m = 0;
     for (int i = 0; i < n; i++) {
         m += a[i];
@@ -69,17 +69,17 @@ struct fldr_s fldr_preprocess(int *a, int n) {
         }
     }
 
-    struct fldr_s x;
-    x.n = n;
-    x.m = m;
-    x.k = k;
-    x.r = r;
-    x.h = h;
-    x.H = H;
+    fldr_preprocess_t *x = malloc(sizeof(fldr_preprocess_t));
+    x->n = n;
+    x->m = m;
+    x->k = k;
+    x->r = r;
+    x->h = h;
+    x->H = H;
     return x;
 }
 
-int fldr_sample(struct fldr_s *x) {
+int fldr_sample(fldr_preprocess_t *x) {
     if (x->n == 1) {
         return 0;
     }
@@ -107,7 +107,8 @@ int fldr_sample(struct fldr_s *x) {
     }
 }
 
-void fldr_free(struct fldr_s *x) {
+void fldr_free(fldr_preprocess_t *x) {
     free(x->h);
     free(x->H);
+    free(x);
 }
