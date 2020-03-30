@@ -39,8 +39,6 @@ def fldr_preprocess_int(a):
 
     return fldr_s(n, m, k, r, h, H)
 
-fldr_preprocess = fldr_preprocess_int
-
 def fldr_sample(x):
     n, h, H = x.n, x.h, x.H
     if n == 1:
