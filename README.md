@@ -96,7 +96,7 @@ The following example is from [src/c/example.c](src/c/example.c):
 
 int main(int argc, char **argv) {
     int N_sample = 100;
-    int * samples = (int *) calloc(N_sample, sizeof(int));
+    int * samples = calloc(N_sample, sizeof(int));
 
     int distribution[5] = { 1, 1, 2, 3, 1 };
     fldr_preprocess_t *x = fldr_preprocess(distribution, 5);

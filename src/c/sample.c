@@ -16,7 +16,7 @@
 #include "fldr.h"
 
 int * load_array(FILE *fp, int length) {
-    int *a = (int *) calloc(length, sizeof(int));
+    int *a = calloc(length, sizeof(int));
     for (int i = 0; i < length; i++) {
         fscanf(fp, "%d", &a[i]);
     }
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     fclose(fp);
 
     // Obtain the samples.
-    int * samples = (int *) calloc(N, sizeof(int));
+    int * samples = calloc(N, sizeof(int));
     fldr_preprocess_t *x = fldr_preprocess(a, n);
     for (int i = 0; i < N; i++) {
         samples[i] = fldr_sample(x);

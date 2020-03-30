@@ -45,8 +45,8 @@ fldr_preprocess_t * fldr_preprocess(int *a, int n) {
     int k = ceil_log2(m);
     int r = (1 << k) - m;
 
-    int *h = (int *) calloc(k, sizeof(int));
-    int *H = (int *) calloc((n+1)*k, sizeof(int));
+    int *h = calloc(k, sizeof(int));
+    int *H = calloc((n+1)*k, sizeof(int));
 
     int d;
     for(int j = 0; j < k; j++) {
