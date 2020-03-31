@@ -46,7 +46,7 @@ def fldr_preprocess_float_c(a):
     n = len(a)
     mantissas = normalize_floats_c(a)
     arrays = [align_mantissa(m) for m in mantissas]
-    m = compute_binary_sum(arrays)
+    m = binary_sum(arrays)
     k = len(m)
     r = compute_reject_bits(m, k)
 
@@ -75,7 +75,7 @@ def normalize_floats_c(a):
     offsets = [max_exponent - abs(r[1]) for r in ratios]
     return [(m[0], m[1], m[2]+o) for (m, e), o in zip(ratios, offsets)]
 
-def compute_binary_sum(arrays):
+def binary_sum(arrays):
     m = binary_add(arrays[0], arrays[1])
     for i in range(2, len(arrays)):
         m = binary_add(m, arrays[i])
@@ -86,7 +86,7 @@ def compute_reject_bits(m, k):
         r = []
     else:
         mantissa_pow_2k = [1] + [0] * (k)
-        r = binary_subtract(mantissa_pow_2k, m)
+        r = binary_sub(mantissa_pow_2k, m)
         assert len(r) <= k
     return r
 
@@ -139,7 +139,7 @@ def binary_add(a, b):
         x[0] = 1
     return binary_trim_inital_zeros(x)
 
-def binary_subtract(a, b):
+def binary_sub(a, b):
     la = len(a)
     lb = len(b)
     assert lb <= la

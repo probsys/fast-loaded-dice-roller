@@ -70,14 +70,14 @@ def test_binary_add(a, b):
         assert answer[3:] == solution[2:]
 
 @pytest.mark.parametrize('a, b', product(bits_list, bits_list))
-def test_binary_subtract(a, b):
-    from fldr.fldrf import binary_subtract
+def test_binary_sub(a, b):
+    from fldr.fldrf import binary_sub
     int_a = bits_to_int(a)
     int_b = bits_to_int(b)
     if (int_a < int_b) or len(a) < len(b):
         return True
     solution = bin(int_a - int_b)
-    answer = '0b%s' % (''.join(map(str, binary_subtract(a, b))))
+    answer = '0b%s' % (''.join(map(str, binary_sub(a, b))))
     assert answer == solution
 
 max_dims = 11
