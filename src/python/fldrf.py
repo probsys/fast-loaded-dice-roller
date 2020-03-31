@@ -45,7 +45,7 @@ BITS_MAX = 1024
 def fldr_preprocess_float_c(a):
     n = len(a)
     mantissas = normalize_floats_c(a)
-    arrays = [align_mantissa(m, m[1] + m[2]) for m in mantissas]
+    arrays = [align_mantissa(m) for m in mantissas]
     m = compute_binary_sum(arrays)
     k = len(m)
     r = compute_reject_bits(m, k)
@@ -116,10 +116,10 @@ def float_to_bits(x):
         l += 1
     return (a, l)
 
-def align_mantissa(mantissa, width):
+def align_mantissa(mantissa):
     (bits, l, offset) = mantissa
-    array = [0] * width
-    start = width - offset - 1
+    array = [0] * (l + offset)
+    start = l - 1
     for i in range(0, l):
         array[start-i] = bits[i]
     return array

@@ -37,7 +37,7 @@ def test_as_integer_ratio_c(x):
     a = x.as_integer_ratio()
     (mantissa, exponent) = as_integer_ratio_c(x)
     assert mantissa[0][mantissa[1]-1] is not 0 or x == 0.0
-    mantissa_bits = align_mantissa(mantissa, mantissa[1]+mantissa[2])
+    mantissa_bits = align_mantissa(mantissa)
     numerator = bits_to_int(mantissa_bits)
     denominator = 2**exponent
     assert a == (numerator, denominator)
@@ -51,9 +51,8 @@ ms = [
 ]
 @pytest.mark.parametrize('m', ms)
 def test_align_mantissa(m):
-    k = m[0][1]
-    offset = m[0][2]
-    assert align_mantissa(m[0], k+offset) == m[1]
+    mantissa, solution = m
+    assert align_mantissa(mantissa) == solution
 
 bits_list = [(0,), (0,1,), (1,),(1, 0), (0,1,1), (1,1,1), (1,1,0,1,1,0)]
 @pytest.mark.parametrize('a, b', product(bits_list, bits_list))
@@ -99,7 +98,7 @@ def test_normalize_floats_equivalent_py_pyc(a):
     from fldr.fldrf import normalize_floats_c
     integers = normalize_floats_py(a)
     mantissas = normalize_floats_c(a)
-    arrays = [align_mantissa(m, m[1] + m[2]) for m in mantissas]
+    arrays = [align_mantissa(m) for m in mantissas]
     for i, j in zip(integers, arrays):
         assert i == bits_to_int(j)
 
