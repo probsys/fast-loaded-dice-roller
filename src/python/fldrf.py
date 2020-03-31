@@ -39,14 +39,21 @@ def as_integer_ratio_py(x):
 # ========================================================================
 # ANSI C99 Implementation (Sketch)
 
+class double_s:
+    def __init__(self, mantissa, width, offset, exponent):
+        self.mantissa = mantissa
+        self.width = width
+        self.offset = offset
+        self.exponent = exponent
+
 # DBL_MAX from <float.h> typically (2^53-1)*(2^(1023-52)) ~ 2^1024.
 DBL_MAX_WIDTH = 1024
 
 def fldr_preprocess_float_c(a):
     n = len(a)
-    mantissas = normalize_floats_c(a)
-    arrays = [align_mantissa(m) for m in mantissas]
-    m = binary_sum(arrays)
+    doubles = normalize_floats_c(a)
+    mantissas = [align_mantissa(d) for d in doubles]
+    m = binary_sum(mantissas)
     k = len(m)
     r = compute_reject_bits(m, k)
 
@@ -55,8 +62,8 @@ def fldr_preprocess_float_c(a):
     for j in range(k):
         d = 0
         for i in range(n):
-            idx = j - (k - len(arrays[i]))
-            w = arrays[i][idx] if 0 <= idx else 0
+            idx = j - (k - len(mantissas[i]))
+            w = mantissas[i][idx] if 0 <= idx else 0
             h[j] += (w > 0)
             if w > 0:
                 H[d][j] = i
@@ -70,51 +77,56 @@ def fldr_preprocess_float_c(a):
     return fldr_s(n, m, k, r, h, H)
 
 def normalize_floats_c(a):
-    ratios = [as_integer_ratio_c(x) for x in a]
-    max_exponent = max(abs(r[1]) for r in ratios)
-    offsets = [max_exponent - abs(r[1]) for r in ratios]
-    return [(m[0], m[1], m[2]+o) for (m, e), o in zip(ratios, offsets)]
+    doubles = [as_integer_ratio_c(x) for x in a]
+    max_exponent = max(d.exponent for d in doubles)
+    for d in doubles:
+        offset = max_exponent - d.exponent
+        d.offset += offset
+        d.width += offset
+        d.exponent = max_exponent
+    return doubles
 
 def as_integer_ratio_c(x):
-    mantissa, exponent = frexp(x)
+    m, exponent = frexp(x)
     i = 0
-    while (mantissa != floor(mantissa)):
-        mantissa *= 2.
+    while (m != floor(m)):
+        m *= 2.
         exponent -= 1
         i += 1
         if DBL_MAX_WIDTH <= i:
             assert False, 'Failed to converge: %1.5f' % (x,)
-    (mantissa_bits, mantissa_k) = float_to_bits(mantissa)
-    mantissa_offset = 0
-    if exponent > 0:
-        mantissa_offset = exponent
+    mantissa, width = decimal_to_binary(m)
+    if 0 < exponent:
+        offset = exponent
         exponent = 0
-    return ((mantissa_bits, mantissa_k, mantissa_offset), abs(exponent))
+    else:
+        offset = 0
+        exponent = abs(exponent)
+    return double_s(mantissa, width, offset, exponent)
 
-def float_to_bits(x):
+def decimal_to_binary(x):
     assert x == floor(x)
-    a = [0]*DBL_MAX_WIDTH
+    bits = [0]*DBL_MAX_WIDTH
     width = 0
     while x > 0:
-        a[width] = int(fmod(x, 2))
+        bits[width] = int(fmod(x, 2))
         x = floor(x/2)
         width += 1
-    return (a, width)
+    return bits, width
 
-def align_mantissa(mantissa):
-    (bits, width, offset) = mantissa
-    array = [0] * (width + offset)
-    start = width - 1
-    for i in range(0, width):
-        array[start-i] = bits[i]
-    return array
+def align_mantissa(double):
+    mantissa = [0] * (double.width + double.offset)
+    start = double.width - 1
+    for i in range(0, double.width):
+        mantissa[start-i] = double.mantissa[i]
+    return mantissa
 
 def compute_reject_bits(m, k):
     if m[0] == 1 and sum(m) == 1:
         r = []
     else:
-        mantissa_pow_2k = [1] + [0] * (k)
-        r = binary_sub(mantissa_pow_2k, m)
+        m_pow_2k = [1] + [0] * (k)
+        r = binary_sub(m_pow_2k, m)
         assert len(r) <= k
     return r
 

@@ -7,6 +7,7 @@ from random import random
 import pytest
 
 from fldr.fldrf import align_mantissa
+from fldr.fldrf import double_s
 
 def linspace(start, stop, n):
     if n == 1:
@@ -35,24 +36,24 @@ def test_as_integer_ratio_py(x):
 def test_as_integer_ratio_c(x):
     from fldr.fldrf import as_integer_ratio_c
     a = x.as_integer_ratio()
-    (mantissa, exponent) = as_integer_ratio_c(x)
-    assert mantissa[0][mantissa[1]-1] is not 0 or x == 0.0
-    mantissa_bits = align_mantissa(mantissa)
-    numerator = bits_to_int(mantissa_bits)
-    denominator = 2**exponent
+    double = as_integer_ratio_c(x)
+    assert double.mantissa[double.width-1] is not 0 or x == 0.0
+    mantissa = align_mantissa(double)
+    numerator = bits_to_int(mantissa)
+    denominator = 2**double.exponent
     assert a == (numerator, denominator)
 
 ms = [
-    (([0,0,0,0,0,0,0], 0, 0), []),
-    (([0,1,0,0,0,0,0], 3, 0), [0,1,0]),
-    (([1,1,0,0,0,0,0], 3, 0), [0,1,1]),
-    (([1,1,0,0,0,0,0], 3, 4), [0,1,1,0,0,0,0]),
-    (([1,1,0,1,1,0,0], 5, 3), [1,1,0,1,1,0,0,0]),
+    (double_s([0,0,0,0,0,0,0], 0, 0, None), []),
+    (double_s([0,1,0,0,0,0,0], 3, 0, None), [0,1,0]),
+    (double_s([1,1,0,0,0,0,0], 3, 0, None), [0,1,1]),
+    (double_s([1,1,0,0,0,0,0], 3, 4, None), [0,1,1,0,0,0,0]),
+    (double_s([1,1,0,1,1,0,0], 5, 3, None), [1,1,0,1,1,0,0,0]),
 ]
 @pytest.mark.parametrize('m', ms)
 def test_align_mantissa(m):
-    mantissa, solution = m
-    assert align_mantissa(mantissa) == solution
+    double, solution = m
+    assert align_mantissa(double) == solution
 
 bits_list = [(0,), (0,1,), (1,),(1, 0), (0,1,1), (1,1,1), (1,1,0,1,1,0)]
 @pytest.mark.parametrize('a, b', product(bits_list, bits_list))
