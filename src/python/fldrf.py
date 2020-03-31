@@ -26,7 +26,7 @@ def as_integer_ratio_py(x):
         mantissa *= 2.
         exponent -= 1
         i += 1
-        if BITS_MAX <= i:
+        if DBL_MAX_WIDTH <= i:
             assert False, 'Failed to converge: %1.5f' % (x,)
     numerator = int(mantissa)
     denominator = 1
@@ -40,7 +40,7 @@ def as_integer_ratio_py(x):
 # ANSI C99 Implementation (Sketch)
 
 # DBL_MAX from <float.h> typically (2^53-1)*(2^(1023-52)) ~ 2^1024.
-BITS_MAX = 1024
+DBL_MAX_WIDTH = 1024
 
 def fldr_preprocess_float_c(a):
     n = len(a)
@@ -75,21 +75,6 @@ def normalize_floats_c(a):
     offsets = [max_exponent - abs(r[1]) for r in ratios]
     return [(m[0], m[1], m[2]+o) for (m, e), o in zip(ratios, offsets)]
 
-def binary_sum(arrays):
-    m = binary_add(arrays[0], arrays[1])
-    for i in range(2, len(arrays)):
-        m = binary_add(m, arrays[i])
-    return m
-
-def compute_reject_bits(m, k):
-    if m[0] == 1 and sum(m) == 1:
-        r = []
-    else:
-        mantissa_pow_2k = [1] + [0] * (k)
-        r = binary_sub(mantissa_pow_2k, m)
-        assert len(r) <= k
-    return r
-
 def as_integer_ratio_c(x):
     mantissa, exponent = frexp(x)
     i = 0
@@ -97,7 +82,7 @@ def as_integer_ratio_c(x):
         mantissa *= 2.
         exponent -= 1
         i += 1
-        if BITS_MAX <= i:
+        if DBL_MAX_WIDTH <= i:
             assert False, 'Failed to converge: %1.5f' % (x,)
     (mantissa_bits, mantissa_k) = float_to_bits(mantissa)
     mantissa_offset = 0
@@ -108,7 +93,7 @@ def as_integer_ratio_c(x):
 
 def float_to_bits(x):
     assert x == floor(x)
-    a = [0]*BITS_MAX
+    a = [0]*DBL_MAX_WIDTH
     width = 0
     while x > 0:
         a[width] = int(fmod(x, 2))
@@ -123,6 +108,21 @@ def align_mantissa(mantissa):
     for i in range(0, width):
         array[start-i] = bits[i]
     return array
+
+def compute_reject_bits(m, k):
+    if m[0] == 1 and sum(m) == 1:
+        r = []
+    else:
+        mantissa_pow_2k = [1] + [0] * (k)
+        r = binary_sub(mantissa_pow_2k, m)
+        assert len(r) <= k
+    return r
+
+def binary_sum(arrays):
+    m = binary_add(arrays[0], arrays[1])
+    for i in range(2, len(arrays)):
+        m = binary_add(m, arrays[i])
+    return m
 
 def binary_add(a, b):
     la = len(a)
