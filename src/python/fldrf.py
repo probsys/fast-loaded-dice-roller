@@ -109,18 +109,18 @@ def as_integer_ratio_c(x):
 def float_to_bits(x):
     assert x == floor(x)
     a = [0]*BITS_MAX
-    l = 0
+    width = 0
     while x > 0:
-        a[l] = int(fmod(x, 2))
+        a[width] = int(fmod(x, 2))
         x = floor(x/2)
-        l += 1
-    return (a, l)
+        width += 1
+    return (a, width)
 
 def align_mantissa(mantissa):
-    (bits, l, offset) = mantissa
-    array = [0] * (l + offset)
-    start = l - 1
-    for i in range(0, l):
+    (bits, width, offset) = mantissa
+    array = [0] * (width + offset)
+    start = width - 1
+    for i in range(0, width):
         array[start-i] = bits[i]
     return array
 
