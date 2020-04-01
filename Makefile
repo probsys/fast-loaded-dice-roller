@@ -6,6 +6,7 @@ c: src/c
 	$(MAKE) -C src/c
 	mkdir -p build/bin
 	cp src/c/fldr.out build/bin/fldr
+	cp src/c/fldrf.out build/bin/fldrf
 
 .PHONY:python
 python: setup.py

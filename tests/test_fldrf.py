@@ -1,5 +1,8 @@
 # Released under Apache 2.0; refer to LICEaE.txt.
 
+import os
+import subprocess
+
 from itertools import product
 from random import getrandbits
 from random import random
@@ -81,6 +84,7 @@ def test_binary_sub(a, b):
     answer = '0b%s' % (''.join(map(str, binary_sub(a, b))))
     assert answer == solution
 
+N_sample = 10000
 max_dims = 11
 rep_dims = 10
 a_list_int = [
@@ -115,3 +119,39 @@ def test_preprocess_identical_py_pyc(a):
     assert x_py.r == bits_to_int(x_c.r)
     assert x_py.h == x_c.h
     assert x_py.H == x_c.H
+
+@pytest.mark.parametrize('a', a_list_int + a_list_float)
+def test_preprocess_identical_py_c(a):
+    from fldr.fldrf import fldr_preprocess_float_c
+    from tempfile import NamedTemporaryFile
+
+    n = len(a)
+    x = fldr_preprocess_float_c(a)
+
+    with NamedTemporaryFile(mode='w', prefix='fldrf.', delete=False) as f:
+        f.write('%d ' % (n,))
+        f.write(' '.join(map(str, a)))
+        f.write('\n')
+        f.close()
+
+    subprocess.check_output(['fldrf', str(N_sample), f.name, '1'])
+    os.remove(f.name)
+
+    with open('%s.fldrf' % (f.name), 'r') as f:
+        (n, k) = [int(x) for x in f.readline().split(' ')]
+        assert n == x.n
+        assert k == x.k
+
+        m = [int(x) for x in f.readline().split(' ')]
+        r = [int(x) for x in f.readline().split(' ')]
+        assert x.m == m
+        assert x.r == r
+
+        h = [int(x) for x in f.readline().split(' ')]
+        assert h == x.h
+
+        for i in range(n+1):
+            Hi = [int(x) for x in f.readline().split(' ')]
+            assert Hi == x.H[i]
+
+    os.remove(f.name)
