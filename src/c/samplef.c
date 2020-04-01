@@ -7,11 +7,10 @@
   Released under Apache 2.0; refer to LICENSE.txt
 */
 
-#include <stdbool.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "fldrf.h"
 #include "flip.h"
@@ -19,7 +18,7 @@
 double * load_array(FILE *fp, int length) {
     double *a = calloc(length, sizeof(*a));
     for (int i = 0; i < length; i++) {
-        fscanf(fp, "%lf", &a[i]);
+        assert(fscanf(fp, "%lf", &a[i]) == 1);
     }
     return a;
 }
@@ -74,7 +73,7 @@ int main(int argc, char **argv) {
     // Load the target distribution.
     FILE *fp = fopen(path, "r");
     int n;
-    fscanf(fp, "%d", &n);
+    assert(fscanf(fp, "%d", &n) == 1);
     double *a = load_array(fp, n);
     fclose(fp);
 
