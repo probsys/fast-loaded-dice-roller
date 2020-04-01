@@ -120,7 +120,7 @@ For example, to generate 100 samples from { 1, 1, 2, 3, 1 }, run:
     $ echo '5 1 1 2 3 1' > w
     $ ./build/bin/fldr 100 w
 
-To generate 100 samples from { 1./4, 0.13, 1.12 }, run:
+To generate 100 samples from { 0.25, 0.13, 1.12 }, run:
 
     $ echo '3 0.25 0.13 1.12' > w
     $ ./build/bin/fldrf 100 w
