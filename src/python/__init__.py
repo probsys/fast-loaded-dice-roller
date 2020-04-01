@@ -6,3 +6,4 @@ from .fldr import fldr_sample
 from .version import __version__
 
 fldr_preprocess = fldr_preprocess_int
+fldrf_preprocess = fldr_preprocess_float
