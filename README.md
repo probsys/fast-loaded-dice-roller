@@ -10,7 +10,7 @@ Artificial Intelligence and Statistics, Proceedings of Machine Learning
 Research 108, Palermo, Sicily, Italy, 2020.
 
 The Fast Loaded Dice Roller (FLDR) is a fast algorithm for rolling an
-n-sided dice.  More specifically, given a list `L` of `n` numbers
+n-sided dice.  More specifically, given a list `L` of `n` positive numbers
 that sum to `m`, FLDR returns an integer `i` with probability `L[i]/m`.
 
 ## Installing
@@ -19,11 +19,15 @@ The software can be installed by running
 
     $ make all
 
-This command creates two artifacts in the `build/` directory:
+This command creates several artifacts in the `build/` directory:
 
-1. `build/bin/fldr`: A C binary providing a command-line interface to FLDR.
+1. `build/lib/fldr`: A Python package that implements FLDR.
 
-2. `build/lib/fldr`: A Python package implementing FLDR.
+2. `build/lib/libfldr.a`: A static C library for C programs use FLDR.
+
+3. `build/include`: Contains header files for C programs that use FLDR.
+
+4. `build/bin`: Contains executables for a command line interface to FLDR.
 
 ## Usage (Python Library)
 
@@ -32,9 +36,10 @@ options for installing the package into your Python 3 environment include:
 
   Option 1. Run `python setup.py install`.
 
-  Option 2. Add the absolute path `build/lib/fldr` to your `PYTHONPATH`
+  Option 2. Add the absolute path to `build/lib` to your `PYTHONPATH`
 
-The following example is from [src/python/example.py](src/python/example.py):
+The following code from [examples/example.py](examples/example.py)
+shows how to use FLDR to sample from a distribution with integer weights.
 
 ```python
 from fldr import fldr_preprocess
@@ -47,47 +52,21 @@ samples = [fldr_sample(x) for _i in range(N_sample)]
 print(' '.join(map(str, samples)))
 ```
 
-The above example can be invoked by e.g., running
+To sample from distributions with floating-point weights, use
+`fldrf_preprocess` instead of `fldr_preprocess`. For an illustration,
+refer to [examples/examplef.py](examples/examplef.py).
 
-    $ python setup.py build
-    $ ./pythenv.sh python src/python/example.py
+These examples can be invoked by running:
 
-If `distribution` is specified as a list of positive floats
-(not necessarily summing to one), then use `fldr_preprocess_float`:
-
-```python
-from fldr import fldr_preprocess_float
-from fldr import fldr_sample
-
-N_sample = 100
-distribution = [5/7, 1/128, 1.711]
-x = fldr_preprocess_float(distribution)
-samples = [fldr_sample(x) for _i in range(N_sample)]
-print(' '.join(map(str, samples)))
-```
-
-## Usage (Command Line Interface)
-
-The command line script in `./build/bin/fldr` has the following interface:
-
-    usage: ./build/bin/fldr N path
-
-where `N` is the number of sample and `path` is the file that specifies
-the target distribution (the first number in `path` should be the number
-of elements in the target distribution).
-
-For example, to generate 100 samples from {1, 1, 2, 3, 1}, run:
-
-    $ echo '5 1 1 2 3 1' > w
-    $ ./build/bin/fldr 100 w
-
-The CLI only supports integer distributions.
+    $ ./pythenv.sh python examples/example.py
+    $ ./pythenv.sh python examples/examplef.py
 
 ## Usage (C Library)
 
 The C library is implemented in `src/c`.
 
-The following example is from [src/c/example.c](src/c/example.c):
+The following code from [examples/example.c](examples/example.c)
+shows how to use FLDR to sample from a distribution with integer weights.
 
 ```c
 #include <stdlib.h>
@@ -111,14 +90,40 @@ int main(int argc, char **argv) {
 }
 ```
 
-The above example can be invoked by e.g., running
+To sample from distributions with floating-point weights, use
+`fldrf_preprocess` instead of `fldr_preprocess`. For an illustration,
+refer to [examples/examplef.c](examples/examplef.c).
 
-    $ cd src/c
-    $ make example.out
-    $ ./example.out
+These examples can be invoked by running:
 
-Only integer distributions are currently implemented in the `C` library
-([issue #2](https://github.com/probcomp/fast-loaded-dice-roller/issues/2)).
+    $ make -C examples
+    $ ./examples/example.out
+    $ ./examples/examplef.out
+
+## Usage (Command Line Interface)
+
+Two executables are provided:
+
+  - `./build/bin/fldr` (integer weights)
+  - `./build/bin/fldrf` (floating-point weights)
+
+The executables have the following command line interface:
+
+    usage: ./build/bin/fldr N path
+
+where `N` is the number of samples to draw; `path` is the file that specifies
+the target distribution (the first number in `path` should be the number
+of elements in the target distribution).
+
+For example, to generate 100 samples from { 1, 1, 2, 3, 1 }, run:
+
+    $ echo '5 1 1 2 3 1' > w
+    $ ./build/bin/fldr 100 w
+
+To generate 100 samples from { 1./4, 0.13, 1.12 }, run:
+
+    $ echo '3 0.25 0.13 1.12' > w
+    $ ./build/bin/fldrf 100 w
 
 ## Tests
 
@@ -128,8 +133,9 @@ Run the following command in the shell:
     $ ./check.sh
 
 Note that the test cases are stochastic and are tested using stochastic
-goodness-of-fit tests, and thus are expected to fail an average of
-five times out of every 100 runs for the given significance level.
+goodness-of-fit tests, and thus 5% of the stochastic test cases will on
+average in any give run of the test module for the given significance
+level.
 
 ## Experiments
 

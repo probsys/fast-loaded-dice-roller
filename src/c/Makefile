@@ -1,17 +1,14 @@
-all: fldr.out fldrf.out
+all: libfldr.a sample.out samplef.out
 
-fldr.out: flip.c fldr.c sample.c
-	gcc -o fldr.out $^
+%.o: %.c
+	gcc -c $< -O3
 
-fldrf.out: flip.c fldrf.c samplef.c
-	gcc -o fldrf.out $^ -lm
+libfldr.a: flip.o fldr.o fldrf.o
+	ar rcs $@ $^
 
-example.out: flip.c fldr.c example.c
-	gcc -o example.out $^
-
-examplef.out: flip.c fldrf.c examplef.c
-	gcc -o examplef.out $^ -lm
+%.out: %.c libfldr.a
+	gcc $< -L. -lfldr -lm -O3 -o $@
 
 .PHONY: clean
 clean:
-	rm -rf *.out
+	rm -rf *.a *.o *.out

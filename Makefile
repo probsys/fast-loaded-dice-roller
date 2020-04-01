@@ -5,8 +5,13 @@ all: c python
 c: src/c
 	$(MAKE) -C src/c
 	mkdir -p build/bin
-	cp src/c/fldr.out build/bin/fldr
-	cp src/c/fldrf.out build/bin/fldrf
+	cp src/c/sample.out build/bin/fldr
+	cp src/c/samplef.out build/bin/fldrf
+	mkdir -p build/lib
+	cp src/c/libfldr.a build/lib
+	mkdir -p build/include
+	cp src/c/*.h build/include
+	$(MAKE) -C src/c clean
 
 .PHONY:python
 python: setup.py
