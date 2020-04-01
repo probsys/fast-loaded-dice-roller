@@ -10,8 +10,25 @@ Artificial Intelligence and Statistics, Proceedings of Machine Learning
 Research 108, Palermo, Sicily, Italy, 2020.
 
 The Fast Loaded Dice Roller (FLDR) is a fast algorithm for rolling an
-n-sided dice.  More specifically, given a list `L` of `n` positive numbers
-that sum to `m`, FLDR returns an integer `i` with probability `L[i]/m`.
+n-sided dice.  More specifically, given a list `L` of `n` positive numbers,
+where `L[i]` represents the relative weight of the `i`th side, FLDR returns
+integer `i` with relative probability `L[i]`.
+
+Unlike most existing sampling libraries, FLDR always produces exact samples
+from the specified probability distribution:
+
+  - For **integer** weights, the probability of returning `i` is precisely
+    equal to the rational number `Fraction(L[i], m)`, where
+    `m` is the sum of `L`.
+
+  - For **floating-points** weights, each weight `L[i]` is (conceptually)
+    converted to the corresponding rational number `Fraction(n[i], d[i])`
+    where `n[i]` is a positive integer and `d[i]` is a power of 2. The
+    rational weights are then normalized (exactly) to sum to unity. The
+    preprocessing computations are never done explicitly in floating-point,
+    but instead operate directly on the binary representation of
+    floating-point numbers, as defined by the
+    [IEEE-754](https://en.wikipedia.org/wiki/IEEE_754) standard
 
 ## Installing
 
