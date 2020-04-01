@@ -92,12 +92,17 @@ a_list_int = [
     for n in range(2, max_dims)
     for k in range(rep_dims)
 ]
+a_list_dyadic = [
+    [1, 1],
+    [1, 2, 1],
+    [1, 1, 2, 3, 1],
+]
 a_list_float = [
     [getrandbits(10) + random() for i in range(n)]
     for n in range(2, max_dims)
     for k in range(rep_dims)
 ]
-@pytest.mark.parametrize('a', a_list_int + a_list_float)
+@pytest.mark.parametrize('a', a_list_int + a_list_dyadic + a_list_float)
 def test_normalize_floats_equivalent_py_pyc(a):
     from fldr.fldrf import normalize_floats_py
     from fldr.fldrf import normalize_floats_c
@@ -107,7 +112,7 @@ def test_normalize_floats_equivalent_py_pyc(a):
     for i, j in zip(integers, arrays):
         assert i == bits_to_int(j)
 
-@pytest.mark.parametrize('a', a_list_int + a_list_float)
+@pytest.mark.parametrize('a', a_list_int + a_list_dyadic + a_list_float)
 def test_preprocess_identical_py_pyc(a):
     from fldr.fldrf import fldr_preprocess_float_py
     from fldr.fldrf import fldr_preprocess_float_c
@@ -120,7 +125,7 @@ def test_preprocess_identical_py_pyc(a):
     assert x_py.h == x_c.h
     assert x_py.H == x_c.H
 
-@pytest.mark.parametrize('a', a_list_int + a_list_float)
+@pytest.mark.parametrize('a', a_list_int + a_list_dyadic + a_list_float)
 def test_preprocess_identical_py_c(a):
     from fldr.fldrf import fldr_preprocess_float_c
     from tempfile import NamedTemporaryFile
@@ -143,8 +148,10 @@ def test_preprocess_identical_py_c(a):
         assert k == x.k
 
         m = [int(x) for x in f.readline().split(' ')]
-        r = [int(x) for x in f.readline().split(' ')]
         assert x.m == m
+
+        rline = f.readline()
+        r = [int(x) for x in rline.split(' ')] if rline != os.linesep else []
         assert x.r == r
 
         h = [int(x) for x in f.readline().split(' ')]

@@ -35,8 +35,8 @@ fldrf_preprocess_t * fldrf_preprocess(double *a, int n) {
     }
 
     struct array_s m = binary_sum(mantissas, n);
-    int k = m.length;
-    struct array_s r = compute_reject_bits(m, k);
+    int k;
+    struct array_s r = compute_reject_bits(m, &k);
 
     int *h = calloc(k, sizeof(*h));
     int *H = calloc((n+1)*k, sizeof(*H));
@@ -153,19 +153,21 @@ struct array_s align_mantissa(struct double_s *d) {
     return mantissa;
 }
 
-struct array_s compute_reject_bits(struct array_s m, int k) {
+struct array_s compute_reject_bits(struct array_s m, int *k) {
 
     struct array_s r;
     if ((m.items[0] == 1) && (array_sum(m) == 1)) {
+        *k = m.length - 1;
         r.length = 0;
         r.items = NULL;
     } else {
+        *k = m.length;
         struct array_s pow_2k;
-        pow_2k.length = k + 1;
-        pow_2k.items = calloc(k + 1, sizeof(*pow_2k.items));
+        pow_2k.length = *k + 1;
+        pow_2k.items = calloc(*k + 1, sizeof(*pow_2k.items));
         pow_2k.items[0] = 1;
         r = binary_sub(pow_2k, m);
-        assert(r.length <= k);
+        assert(r.length <= *k);
     }
 
     return r;

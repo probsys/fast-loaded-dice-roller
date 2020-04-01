@@ -41,7 +41,7 @@ struct double_s * as_integer_ratio(double x);
 struct array_s decimal_to_binary(double x, int *width);
 struct array_s align_mantissa(struct double_s *m);
 
-struct array_s compute_reject_bits(struct array_s m, int k);
+struct array_s compute_reject_bits(struct array_s m, int *k);
 struct array_s binary_sum(struct array_s arrays[], int n);
 struct array_s binary_add(struct array_s a, struct array_s b);
 struct array_s binary_sub(struct array_s a, struct array_s b);

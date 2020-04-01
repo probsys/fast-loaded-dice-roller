@@ -54,8 +54,7 @@ def fldr_preprocess_float_c(a):
     doubles = normalize_floats_c(a)
     mantissas = [align_mantissa(d) for d in doubles]
     m = binary_sum(mantissas)
-    k = len(m)
-    r = compute_reject_bits(m, k)
+    (r, k) = compute_reject_bits(m)
 
     h = [0] * k
     H = [[-1]*k for _i in range(n+1)]
@@ -121,14 +120,16 @@ def align_mantissa(double):
         mantissa[start-i] = double.mantissa[i]
     return mantissa
 
-def compute_reject_bits(m, k):
+def compute_reject_bits(m):
     if m[0] == 1 and sum(m) == 1:
+        k = len(m) - 1
         r = []
     else:
+        k = len(m)
         m_pow_2k = [1] + [0] * (k)
         r = binary_sub(m_pow_2k, m)
         assert len(r) <= k
-    return r
+    return r, k
 
 def binary_sum(arrays):
     m = binary_add(arrays[0], arrays[1])
