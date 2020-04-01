@@ -18,7 +18,7 @@
 #include "fldrf.h"
 #include "flip.h"
 
-const int DBL_MAX_WIDTH = ceil(log2(DBL_MAX));
+#define DBL_MAX_WIDTH (int)ceil(log2(DBL_MAX))
 
 fldrf_preprocess_t * fldrf_preprocess(double *a, int n) {
 

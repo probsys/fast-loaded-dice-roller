@@ -32,8 +32,6 @@ struct fldrf_s {
 };
 typedef struct fldrf_s fldrf_preprocess_t;
 
-extern const int DBL_MAX_WIDTH;
-
 fldrf_preprocess_t * fldrf_preprocess(double *a, int n);
 
 void normalize_double_s(struct double_s *d[], int n);
