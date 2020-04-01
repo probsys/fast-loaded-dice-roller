@@ -48,8 +48,8 @@ This command creates several artifacts in the `build/` directory:
 
 ## Usage (Python Library)
 
-The Python 3 library is implemented in `src/python`. Some
-options for installing the package into your Python 3 environment include:
+The Python 3 library is implemented in `src/python`.
+Options for installing the package into your Python 3 environment include:
 
   Option 1. Run `python setup.py install`.
 
