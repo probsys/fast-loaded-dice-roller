@@ -1,13 +1,13 @@
 all: libfldr.a sample.out samplef.out
 
 %.o: %.c
-	gcc -c $< -O3
+	gcc -c -o $@ -O3 $^
 
 libfldr.a: flip.o fldr.o fldrf.o
 	ar rcs $@ $^
 
 %.out: %.c libfldr.a
-	gcc $< -L. -lfldr -lm -O3 -o $@
+	gcc -o $@ -O3 $^ -lm
 
 .PHONY: clean
 clean:

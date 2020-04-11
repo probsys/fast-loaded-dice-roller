@@ -1,7 +1,10 @@
 all: example.out examplef.out
 
 %.out: %.c
-	gcc $< -I ../build/include -L ../build/lib -lfldr -lm -O3 -o $@
+	gcc -o $@ -O3 \
+		-I ../build/include \
+		-L ../build/lib \
+		$^ -lfldr -lm
 
 .PHONY: clean
 clean:
