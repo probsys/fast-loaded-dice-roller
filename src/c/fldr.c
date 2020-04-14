@@ -45,8 +45,8 @@ fldr_preprocess_t * fldr_preprocess(int *a, int n) {
     int k = ceil_log2(m);
     int r = (1 << k) - m;
 
-    int *h = calloc(k, sizeof(int));
-    int *H = calloc((n+1)*k, sizeof(int));
+    int *h = calloc(k, sizeof(*h));
+    int *H = calloc((n+1)*k, sizeof(*H));
 
     int d;
     for(int j = 0; j < k; j++) {
@@ -69,7 +69,7 @@ fldr_preprocess_t * fldr_preprocess(int *a, int n) {
         }
     }
 
-    fldr_preprocess_t *x = malloc(sizeof(fldr_preprocess_t));
+    fldr_preprocess_t *x = malloc(sizeof(*x));
     x->n = n;
     x->m = m;
     x->k = k;

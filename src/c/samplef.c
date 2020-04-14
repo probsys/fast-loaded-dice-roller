@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
     fclose(fp);
 
     // Obtain the samples.
-    int *samples = calloc(N, sizeof(int));
+    int *samples = calloc(N, sizeof(*samples));
     fldrf_preprocess_t *x = fldrf_preprocess(a, n);
 
     for (int i = 0; i < N; i++) {

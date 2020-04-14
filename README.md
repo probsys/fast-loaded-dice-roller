@@ -92,7 +92,7 @@ shows how to use FLDR to sample from a distribution with integer weights.
 
 int main(int argc, char **argv) {
     int N_sample = 100;
-    int *samples = calloc(N_sample, sizeof(int));
+    int *samples = calloc(N_sample, sizeof(*samples));
 
     int distribution[5] = { 1, 1, 2, 3, 1 };
     fldr_preprocess_t *x = fldr_preprocess(distribution, 5);

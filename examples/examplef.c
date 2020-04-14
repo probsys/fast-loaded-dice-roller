@@ -13,7 +13,7 @@
 
 int main(int argc, char **argv) {
     int N_sample = 100;
-    int *samples = calloc(N_sample, sizeof(int));
+    int *samples = calloc(N_sample, sizeof(*samples));
 
     double distribution[5] = { 1./4, 0.13, 1.12 };
     fldrf_preprocess_t *x = fldrf_preprocess(distribution, 5);
