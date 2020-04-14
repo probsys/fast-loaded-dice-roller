@@ -143,7 +143,7 @@ struct array_s decimal_to_binary(double x, int *width) {
 struct array_s align_mantissa(struct double_s *d) {
     struct array_s mantissa;
     mantissa.length = d->width + d->offset;
-    mantissa.items = calloc(mantissa.length, sizeof(mantissa.items));
+    mantissa.items = calloc(mantissa.length, sizeof(*mantissa.items));
 
     int start = d->width - 1;
     for (int i = 0; i < d->width; i++) {
