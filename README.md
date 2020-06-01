@@ -29,9 +29,9 @@ FLDR produces exact samples from the specified probability distribution:
     floating-point numbers, as defined by the
     [IEEE-754](https://en.wikipedia.org/wiki/IEEE_754) standard
 
-## Installing
+## Building and Installing
 
-The software can be installed by running
+The software can be built by running
 
     $ make all
 
