@@ -14,8 +14,7 @@ n-sided dice.  More specifically, given a list `L` of `n` positive numbers,
 where `L[i]` represents the relative weight of the `i`th side, FLDR returns
 integer `i` with relative probability `L[i]`.
 
-Unlike most existing sampling libraries, FLDR always produces exact samples
-from the specified probability distribution:
+FLDR produces exact samples from the specified probability distribution:
 
   - For **integer** weights, the probability of returning `i` is precisely
     equal to the rational number `Fraction(L[i], m)`, where
