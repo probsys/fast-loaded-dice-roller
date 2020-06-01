@@ -4,7 +4,7 @@ This repository contains reference implementations in C and Python
 of the sampling algorithm in
 
 > Feras A. Saad, Cameron E. Freer, Martin C. Rinard, and Vikash K. Mansinghka.
-[The Fast Loaded Dice Roller: A Near-Optimal Exact Sampler for Discrete Probability Distributions](http://fsaad.mit.edu/assets/SFRM-FLDR-AISTATS-2020.pdf).
+[The Fast Loaded Dice Roller: A Near-Optimal Exact Sampler for Discrete Probability Distributions](https://arxiv.org/pdf/2003.03830.pdf).
 In AISTATS 2020: Proceedings of the 23rd International Conference on
 Artificial Intelligence and Statistics, Proceedings of Machine Learning
 Research 108, Palermo, Sicily, Italy, 2020.
