@@ -23,7 +23,18 @@ double * load_array(FILE *fp, int length) {
     return a;
 }
 
-void * write_array(FILE *fp, int *x, int n) {
+void write_array(FILE *fp, int *x, int n) {
+    for (int j = 0; j < n; j++) {
+        if (j < n - 1) {
+            fprintf(fp, "%d ", x[j]);
+        } else {
+            fprintf(fp, "%d", x[j]);
+        }
+    }
+    fprintf(fp, "\n");
+}
+
+void write_bit_array(FILE *fp, bit_t *x, int n) {
     for (int j = 0; j < n; j++) {
         if (j < n - 1) {
             fprintf(fp, "%d ", x[j]);
@@ -41,8 +52,8 @@ void write_fldrf_s(char *fname, fldrf_preprocess_t *x) {
     fprintf(fp, "%d %d", x->n, x->k);
     fprintf(fp, "\n");
 
-    write_array(fp, x->m.items, x->m.length);
-    write_array(fp, x->r.items, x->r.length);
+    write_bit_array(fp, x->m.items, x->m.length);
+    write_bit_array(fp, x->r.items, x->r.length);
     write_array(fp, x->h, x->k);
 
     for (int row = 0; row < x->n + 1; row++){

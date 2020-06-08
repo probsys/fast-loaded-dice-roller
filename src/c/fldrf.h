@@ -10,9 +10,11 @@
 #ifndef FLDRF_H
 #define FLDRF_H
 
+typedef unsigned char bit_t;
+
 struct array_s {
     int length;
-    int *items;
+    bit_t *items;
 };
 
 struct double_s {
@@ -34,6 +36,7 @@ typedef struct fldrf_s fldrf_preprocess_t;
 
 fldrf_preprocess_t * fldrf_preprocess(double *a, int n);
 
+struct array_s alloc_array_s(int length);
 void normalize_double_s(struct double_s *d[], int n);
 struct double_s * as_integer_ratio(double x);
 struct array_s decimal_to_binary(double x, int *width);
