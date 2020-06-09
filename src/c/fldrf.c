@@ -65,7 +65,8 @@ fldrf_preprocess_t * fldrf_preprocess(double *a, int n) {
     }
 
     for (int i = 0; i < n; i++) {
-        free(mantissas[i].items);
+        array_s_free(mantissas[i]);
+        double_s_free(ratios[i]);
     }
 
     fldrf_preprocess_t *x = malloc(sizeof(*x));
@@ -81,7 +82,9 @@ fldrf_preprocess_t * fldrf_preprocess(double *a, int n) {
 void normalize_double_s(struct double_s *d[], int n) {
     int max_exponent = d[0]->exponent;
     for (int i = 1; i < n; i++) {
-        max_exponent = fmax(max_exponent, d[i]->exponent);
+        if (max_exponent < d[i]->exponent) {
+            max_exponent = d[i]->exponent;
+        }
     }
     for (int i = 0; i < n; i++) {
         int offset = max_exponent - d[i]->exponent;
@@ -126,9 +129,7 @@ struct double_s * as_integer_ratio(double x) {
 struct array_s decimal_to_binary(double x, int *width) {
     assert(x == floor(x));
 
-    struct array_s bits;
-    bits.length = DBL_MAX_WIDTH;
-    bits.items = calloc(bits.length, sizeof(*bits.items));
+    struct array_s bits = array_s_alloc(DBL_MAX_WIDTH);
 
     int w = 0;
     while (0 < x) {
@@ -141,9 +142,7 @@ struct array_s decimal_to_binary(double x, int *width) {
 }
 
 struct array_s align_mantissa(struct double_s *d) {
-    struct array_s mantissa;
-    mantissa.length = d->width + d->offset;
-    mantissa.items = calloc(mantissa.length, sizeof(*mantissa.items));
+    struct array_s mantissa = array_s_alloc(d->width + d->offset);
 
     int start = d->width - 1;
     for (int i = 0; i < d->width; i++) {
@@ -162,11 +161,10 @@ struct array_s compute_reject_bits(struct array_s m, int *k) {
         r.items = NULL;
     } else {
         *k = m.length;
-        struct array_s pow_2k;
-        pow_2k.length = *k + 1;
-        pow_2k.items = calloc(*k + 1, sizeof(*pow_2k.items));
+        struct array_s pow_2k = array_s_alloc(*k + 1);
         pow_2k.items[0] = 1;
         r = binary_sub(pow_2k, m);
+        array_s_free(pow_2k);
         assert(r.length <= *k);
     }
 
@@ -179,9 +177,13 @@ struct array_s binary_sum(struct array_s arrays[], int n) {
     }
 
     struct array_s m;
+    struct array_s m_prev;
     m = binary_add(arrays[0], arrays[1]);
+    m_prev = m;
     for (int i = 2; i < n; i ++) {
-        m = binary_add(m, arrays[i]);
+        m = binary_add(m_prev, arrays[i]);
+        array_s_free(m_prev);
+        m_prev = m;
     }
 
     return m;
@@ -193,21 +195,20 @@ struct array_s binary_add(struct array_s a, struct array_s b) {
     int l = lb < la ? la : lb;
     int c = 0;
     int length = l+1;
-    int *y = calloc(length, sizeof(*y));
+    struct array_s y = array_s_alloc(length);
 
     for (int i = 1; i < l + 1; i++) {
         int ai = (0 <= la - i) ? a.items[la - i] : 0;
         int bi = (0 <= lb - i) ? b.items[lb - i] : 0;
-        y[l+1-i] = ((ai ^ bi) ^ c);
+        y.items[l+1-i] = ((ai ^ bi) ^ c);
         c = (ai & bi) | (ai & c) | (bi & c);
     }
     if (c == 1) {
-       y[0] = 1;
+       y.items[0] = 1;
     }
 
-    struct array_s x = {.length = length, .items = y};
-    remove_leading_zeros(&x);
-    return x;
+    remove_leading_zeros(&y);
+    return y;
 }
 
 struct array_s binary_sub(struct array_s a, struct array_s b){
@@ -216,21 +217,20 @@ struct array_s binary_sub(struct array_s a, struct array_s b){
     int l = lb < la ? la : lb;
     int c = 0;
     int length = l+1;
-    int *y = calloc(length, sizeof(*y));
+    struct array_s y = array_s_alloc(length);
 
     for (int i = 1; i < l + 1; i++) {
         int ai = (0 <= la - i) ? a.items[la - i] : 0;
         int bi = (0 <= lb - i) ? b.items[lb - i] : 0;
-        y[l+1-i] = ((ai ^ bi) ^ c);
+        y.items[l+1-i] = ((ai ^ bi) ^ c);
         c = c & (!(ai ^ bi)) | (!ai & bi);
     }
     if (c == 1) {
-       y[0] = 1;
+       y.items[0] = 1;
     }
 
-    struct array_s x = {.length = length, .items = y};
-    remove_leading_zeros(&x);
-    return x;
+    remove_leading_zeros(&y);
+    return y;
 }
 
 void remove_leading_zeros(struct array_s *a) {
@@ -288,6 +288,13 @@ int fldrf_sample(fldrf_preprocess_t *x) {
             c = c + 1;
         }
     }
+}
+
+struct array_s array_s_alloc(int length) {
+   struct array_s a;
+   a.length = length;
+   a.items = calloc(length, sizeof(*a.items));
+   return a;
 }
 
 void array_s_free(struct array_s x) {
