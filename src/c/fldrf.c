@@ -81,7 +81,9 @@ fldrf_preprocess_t * fldrf_preprocess(double *a, int n) {
 void normalize_double_s(struct double_s *d[], int n) {
     int max_exponent = d[0]->exponent;
     for (int i = 1; i < n; i++) {
-        max_exponent = fmax(max_exponent, d[i]->exponent);
+        if (max_exponent < d[i]->exponent) {
+            max_exponent = d[i]->exponent;
+        }
     }
     for (int i = 0; i < n; i++) {
         int offset = max_exponent - d[i]->exponent;
