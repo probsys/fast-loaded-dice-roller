@@ -177,9 +177,13 @@ struct array_s binary_sum(struct array_s arrays[], int n) {
     }
 
     struct array_s m;
+    struct array_s m_prev;
     m = binary_add(arrays[0], arrays[1]);
+    m_prev = m;
     for (int i = 2; i < n; i ++) {
-        m = binary_add(m, arrays[i]);
+        m = binary_add(m_prev, arrays[i]);
+        array_s_free(m_prev);
+        m_prev = m;
     }
 
     return m;
