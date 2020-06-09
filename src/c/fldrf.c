@@ -65,7 +65,8 @@ fldrf_preprocess_t * fldrf_preprocess(double *a, int n) {
     }
 
     for (int i = 0; i < n; i++) {
-        free(mantissas[i].items);
+        array_s_free(mantissas[i]);
+        double_s_free(ratios[i]);
     }
 
     fldrf_preprocess_t *x = malloc(sizeof(*x));
