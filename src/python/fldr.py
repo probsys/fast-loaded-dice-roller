@@ -10,12 +10,6 @@ fldr_s = namedtuple('fldr_s', ['n', 'm', 'k', 'r', 'h', 'H'])
 def flip():
     return getrandbits(1)
 
-def fldr_preprocess_float(a):
-    ratios = [x.as_integer_ratio() for x in a]
-    Z = max(r[1] for r in ratios)
-    integers = [r[0]*int(Z/r[1]) for r in ratios]
-    return fldr_preprocess_int(integers)
-
 def fldr_preprocess_int(a):
     n = len(a)
     m = sum(a)
