@@ -1,8 +1,6 @@
 # Released under Apache 2.0; refer to LICENSE.txt
 
 from collections import namedtuple
-from math import ceil
-from math import log2
 from random import getrandbits
 
 fldr_s = namedtuple('fldr_s', ['n', 'm', 'k', 'r', 'h', 'H'])
@@ -13,7 +11,7 @@ def flip():
 def fldr_preprocess_int(a):
     n = len(a)
     m = sum(a)
-    k = ceil(log2(m))
+    k = (m-1).bit_length() # ceil(log2(m))
     r = (1 << k) - m
 
     h = [0] * k

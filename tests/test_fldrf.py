@@ -112,10 +112,7 @@ def test_normalize_floats_equivalent_py_pyc(a):
     for i, j in zip(integers, arrays):
         assert i == bits_to_int(j)
 
-# Add test case for Python 3 library error in ceil(log2):
-# https://github.com/probcomp/fast-loaded-dice-roller/issues/4
-a_float_uniform = [pytest.param([.1]*10, marks=pytest.mark.xfail(strict=True))]
-@pytest.mark.parametrize('a', a_list_int + a_list_dyadic + a_list_float + a_float_uniform)
+@pytest.mark.parametrize('a', a_list_int + a_list_dyadic + a_list_float + [[.1]*10])
 def test_preprocess_identical_py_pyc(a):
     from fldr.fldrf import fldr_preprocess_float_py
     from fldr.fldrf import fldr_preprocess_float_c
