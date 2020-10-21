@@ -1,3 +1,5 @@
+[![pypi](https://img.shields.io/pypi/v/fldr.svg)](https://pypi.org/project/fldr/)
+
 # The Fast Loaded Dice Roller
 
 This repository contains reference implementations in C and Python
