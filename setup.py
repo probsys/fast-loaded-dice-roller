@@ -15,9 +15,12 @@ setup(
     name='fldr',
     version=__version__,
     description='Fast Loaded Dice Roller',
-    license='Apache-2.0',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
+    url='https://github.com/probcomp/fast-loaded-dice-roller',
+    maintainer='Feras A. Saad',
+    maintainer_email='fsaad@mit.edu',
+    license='Apache-2.0',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Science/Research',
