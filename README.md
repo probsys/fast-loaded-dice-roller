@@ -1,3 +1,5 @@
+[![pypi](https://img.shields.io/pypi/v/fldr.svg)](https://pypi.org/project/fldr/)
+
 # The Fast Loaded Dice Roller
 
 This repository contains reference implementations in C and Python
@@ -31,7 +33,11 @@ FLDR produces exact samples from the specified probability distribution:
 
 ## Building and Installing
 
-The software can be built by running
+The Python library can be installed via pip
+
+    pip install fldr
+
+The C library can be built by running
 
     $ make all
 
@@ -39,7 +45,7 @@ This command creates several artifacts in the `build/` directory:
 
 1. `build/lib/fldr`: A Python package that implements FLDR.
 
-2. `build/lib/libfldr.a`: A static C library for C programs use FLDR.
+2. `build/lib/libfldr.a`: A static C library for C programs that use FLDR.
 
 3. `build/include`: Contains header files for C programs that use FLDR.
 
@@ -48,12 +54,6 @@ This command creates several artifacts in the `build/` directory:
 ## Usage (Python Library)
 
 The Python 3 library is implemented in `src/python`.
-Options for installing the package into your Python 3 environment include:
-
-  Option 1. Run `python setup.py install`.
-
-  Option 2. Add the absolute path to `build/lib` to your `PYTHONPATH`
-
 The following code from [examples/example.py](examples/example.py)
 shows how to use FLDR to sample from a distribution with integer weights.
 

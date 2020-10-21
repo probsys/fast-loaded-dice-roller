@@ -21,6 +21,11 @@ root=`cd -- "$(dirname -- "$0")" && pwd`
         ./pythenv.sh "$PYTHON" -m pytest --pyargs fldr
     elif [ ${1} = 'crash' ]; then
         ./pythenv.sh "$PYTHON" -m pytest -k 'not __ci_' --pyargs fldr
+    elif [ ${1} = 'release' ]; then
+        # Make a release
+        rm -rf dist
+        "$PYTHON" setup.py sdist bdist_wheel
+        twine upload --repository pypi dist/*
     else
         # If args are specified delegate control to user.
         ./pythenv.sh "$PYTHON" -m pytest "$@"
