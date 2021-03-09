@@ -1,6 +1,6 @@
 # Released under Apache 2.0; refer to LICENSE.txt
 
-__version__ = '1.4.5'
+__version__ = '1.4.6'
 
 from .fldr import fldr_preprocess_int
 from .fldr import fldr_sample
