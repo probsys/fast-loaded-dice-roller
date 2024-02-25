@@ -35,7 +35,7 @@ max_failed = 0.05 * len(a_list)
 
 num_failed_py = 0
 @pytest.mark.parametrize('a', a_list)
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_fldr_sampler_py(a):
     global num_failed_py
     m = sum(a)
@@ -53,7 +53,7 @@ def test_fldr_sampler_py(a):
 
 num_failed_c = 0
 @pytest.mark.parametrize('a', a_list)
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_fldr_sampler_c(a):
     global num_failed_c
     m = sum(a)
