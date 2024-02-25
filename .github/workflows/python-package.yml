@@ -35,3 +35,24 @@ jobs:
         make
         ./example.out
         ./examplef.out
+
+  # Auto-publish when version is increased
+  publish:
+    # Only try to publish if:
+    # * Repo is self (prevents running from forks)
+    # * Branch is `main`
+    if: |
+      github.repository == 'probsys/fast-loaded-dice-roller'
+      && github.ref == 'refs/heads/master'
+    needs: build  # Only publish after tests are successful
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 30
+
+    steps:
+    - uses: etils-actions/pypi-auto-publish@v1
+      with:
+        pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+        gh-token: ${{ secrets.GITHUB_TOKEN }}
+        parse-changelog: false
