@@ -36,6 +36,6 @@ setup(
         'fldr.tests': 'tests',
     },
     extras_require={
-        'tests' : ['pytest', 'scipy']
+        'tests' : ['pytest', 'flaky', 'scipy']
     }
 )
