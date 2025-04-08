@@ -173,11 +173,13 @@ Please cite the following paper:
     publisher       = {PMLR},
     year            = 2020,
     keywords        = {random variate generation, sampling, discrete random variables},
-    abstract        = {This paper introduces a new algorithm for the fundamental problem of generating a random integer from a discrete probability distribution using a source of independent and unbiased random coin flips. This algorithm, which we call the Fast Loaded Dice Roller (FLDR), has efficient complexity properties in space and time: the size of the sampler is guaranteed to be linear in the number of bits needed to encode the target distribution and the sampler consumes (in expectation) at most 6.5 bits of entropy more than the information-theoretically minimal rate, independently of the values or size of the target distribution. We present an easy-to-implement, linear-time preprocessing algorithm and a fast implementation of the FLDR using unsigned integer arithmetic. Empirical evaluations establish that the FLDR is 2x--10x faster than multiple baseline algorithms for exact sampling, including the widely-used alias and interval samplers. It also uses up to 10000x less space than the information-theoretically optimal sampler, at the expense of a less than 1.5x runtime overhead.},
-    note            = {(To Appear)},
     }
 
 ## Related Repositories
+
+The Amplified Loaded Dice Roller (ALDR) is a generalization of FLDR
+that improves its entropy consumption
+https://github.com/probsys/amplified-loaded-dice-roller.
 
 For an optimal (approximate) dice rolling algorithm that uses a fixed,
 pre-specified bit length, see https://github.com/probcomp/optimal-approximate-sampling.
