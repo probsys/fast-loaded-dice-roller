@@ -39,7 +39,7 @@ num_failed_py = 0
 def test_fldr_sampler_py(a):
     global num_failed_py
     m = sum(a)
-    p_target = [Fraction(x, m) for x in a]
+    p_target = [float(Fraction(x, m)) for x in a]
     x = fldr_preprocess(a)
     samples = [fldr_sample(x) for _i in range(N_sample)]
     if x.n == 1:
@@ -57,7 +57,7 @@ num_failed_c = 0
 def test_fldr_sampler_c(a):
     global num_failed_c
     m = sum(a)
-    p_target = [Fraction(x, m) for x in a]
+    p_target = [float(Fraction(x, m)) for x in a]
     n = len(a)
     with NamedTemporaryFile(mode='w', prefix='fldr.', delete=False) as f:
         f.write('%d ' % (n,))
